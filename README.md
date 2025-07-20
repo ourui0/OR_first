@@ -1,29 +1,166 @@
-# project
+### 项目核心：体育活动室
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+该项目的目标是创建一个多用户体育活动管理和报名平台。根据评分规则，整个项目的基础分为 100 分，最终成绩可在 0 到 120 分之间。
 
-## Customize configuration
 
-See [Vite Configuration Reference](https://vite.dev/config/).
 
-## Project Setup
+------
 
-```sh
-npm install
-```
 
-### Compile and Hot-Reload for Development
 
-```sh
-npm run dev
-```
+### 第一部分：软件功能实现 (基础分100分 + 附加分最高20分)
 
-### Compile and Minify for Production
 
-```sh
-npm run build
-```
+
+你需要实现8个基础功能，若有任何一项缺失，将从总分中扣除 12.5 分。  以下是使用 Vue 实现这些功能的建议：
+
+
+
+**基础功能 (8项)**
+
+1. **多用户注册、登录**
+    - **Vue 实现**:
+        - 创建 `Register.vue` 和 `Login.vue` 视图组件。
+        - 使用 Vue Router 进行路由管理，例如 `/login` 和 `/register`。
+        - 利用 Vue Router 的导航守卫（`beforeEnter`）来保护需要登录才能访问的页面（如活动报名、订单管理）。
+        - 用户登录成功后，将用户信息和认证凭证（如 Token）存储在 Pinia（推荐）或 Vuex 中，以便在整个应用中访问。
+2. **活动管理 (管理员功能)**
+    - **Vue 实现**:
+        - 创建一个 `AdminDashboard.vue` 视图，作为管理员后台的入口。
+        - 在后台中，创建一个 `ActivityManagement.vue` 组件，用于展示所有活动的列表。
+        - 此组件应包含“新增活动”、“编辑”和“删除”按钮。点击按钮可弹出表单模态框（可以使用 `ActivityForm.vue` 组件复用）或跳转到专门的编辑/创建页面。
+        - 在路由层面，通过角色判断来限制对这些管理页面的访问。
+3. **活动报名**
+    - **Vue 实现**:
+        - 在 `ActivityDetail.vue` 页面，为已登录的用户显示一个“立即报名”按钮。
+        - 点击按钮后，向后端发送报名请求。可以增加交互，如弹出确认框，并在报名成功或失败后给出提示信息（例如使用 Toast 通知）。
+4. **活动订单管理**
+    - **Vue 实现**:
+        - 创建一个 `MyProfile.vue` 或 `UserCenter.vue` 视图。
+        - 在该视图中，包含一个 `MyEnrollments.vue` 或 `MyOrders.vue` 子组件，用于请求并展示当前用户已报名的活动列表。
+5. **活动列表查看**
+    - **Vue 实现**:
+        - 创建一个 `ActivityList.vue` 视图，作为应用的主页或核心页面之一。
+        - 在该组件的 `onMounted` 或 `created` 生命周期钩子中，调用 API 获取所有活动的列表数据。
+        - 使用 `v-for` 指令将活动数据渲染成卡片或列表项。每个列表项都可以点击并跳转到对应的详情页。
+6. **活动详情查看**
+    - **Vue 实现**:
+        - 创建一个 `ActivityDetail.vue` 视图。
+        - 使用 Vue Router 的动态路由匹配，例如 `path: '/activity/:id'`。
+        - 在组件中，通过 `useRoute().params.id` 获取活动的 ID，然后调用 API 获取该活动的详细信息并渲染到页面上。
+7. **活动评论**
+    - **Vue 实现**:
+        - 在 `ActivityDetail.vue` 页面下方，创建一个 `CommentSection.vue` 组件。
+        - 该组件负责加载和显示与该活动相关的评论列表。
+        - 提供一个输入框和提交按钮，允许已登录用户发表新评论。
+8. **活动搜索**
+    - **Vue 实现**:
+        - 可以创建一个 `SearchBar.vue` 组件，并将其放置在导航栏或 `ActivityList.vue` 页面的顶部。
+        - 通过 `v-model` 绑定搜索关键词，用户输入时可以实时或点击按钮后触发搜索，向后端发送带查询参数的请求。
+
+
+
+附加功能 (可获得5-20分的加分)
+
+
+
+为了获得更高的分数，你可以考虑实现以下功能：
+
+- **高级筛选**: 在活动列表页增加按活动状态（未开始/进行中/已结束）、日期范围或活动类型进行筛选的功能。
+- **日历视图**: 提供一个日历页面，将所有活动在日历上进行可视化展示。
+- **用户个人主页**: 允许用户编辑个人资料、上传头像等。
+- **站内信/通知**: 当用户报名的活动即将开始时，发送站内信或邮件提醒。
+- **图片懒加载**: 在活动列表页，当活动卡片滚动到视口内时再加载活动图片，优化性能。
+
+------
+
+
+
+### 第二部分：开发活动 (最多扣除30分)
+
+
+
+这部分考察的是你的工程化能力和代码质量，每项未完成最多扣10分。
+
+
+
+1.
+
+**前端代码组件化、模块化**
+
+
+
+
+
+- **实施建议**:
+
+    - **组件化**: 将 UI 拆分为可复用的组件。例如，一个活动卡片 (`ActivityCard.vue`)、一个评论项 (`CommentItem.vue`)、一个搜索栏 (`SearchBar.vue`)。
+
+    - **模块化**: 合理组织你的项目结构。例如：
+
+      ```
+      /src
+      ├── /assets       # 静态资源
+      ├── /components   # 可复用的小组件
+      ├── /views        # 页面级视图组件
+      ├── /router       # 路由配置
+      ├── /store        # Pinia/Vuex 状态管理
+      ├── /services     # API 请求封装
+      └── main.js
+      ```
+
+2.
+
+**基于 GitHub Actions 的持续集成 (CI)**
+
+
+
+
+
+- **实施建议**:
+    - 在你的项目根目录下创建 `.github/workflows/ci.yml` 文件。
+    - 配置工作流，至少包含代码检出 (`actions/checkout`)、安装 Node.js (`actions/setup-node`)、安装依赖 (`npm install`) 和运行自动化测试 (`npm run test`) 或代码风格检查 (`npm run lint`) 的步骤。
+
+3.
+
+**良好的编码习惯**
+
+
+
+
+
+- **实施建议**:
+    - **命名规范**: 组件文件使用大驼峰命名法 (`MyComponent.vue`)，变量和方法使用小驼峰命名法 (`myVariable`)。
+    - **代码风格**: 使用 ESLint 和 Prettier 工具来强制执行统一的代码风格。
+    - **注释**: 对复杂的逻辑或组件的重要 `props` 添加清晰的注释。
+
+4.
+
+**RESTful 风格的 Web 服务接口**
+
+
+
+
+
+- **实施建议**:
+    - 这是对后端 API 的要求，但前端需要据此进行消费。你应该确保你的 API 调用遵循 RESTful 约定。例如：
+        - 获取活动列表: `GET /api/activities`
+        - 获取单个活动: `GET /api/activities/1`
+        - 创建活动: `POST /api/activities`
+        - 报名活动: `POST /api/activities/1/enroll`
+    - 在前端，将所有 API 请求封装在 `/services` 目录下，便于管理和复用。
+
+5.
+
+**软件在生产环境运行**
+
+
+
+
+
+- **实施建议**:
+    - 运行 `npm run build` 命令，Vue CLI 会将你的代码打包到 `dist` 目录。
+    - 将 `dist` 目录下的所有静态文件部署到一个静态网站托管服务（如 GitHub Pages, Netlify, Vercel）或一个配置好的 Nginx 服务器上。确保应用可以被公开访问并正常运行。
+
