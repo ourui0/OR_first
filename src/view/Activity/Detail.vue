@@ -56,7 +56,7 @@ const submitComment = async () => {
   if (!commentText.value.trim()) return;
   await addComment({ activityId: route.params.id, content: commentText.value });
   commentText.value = '';
-  loadComments();
+  await loadComments();
 };
 
 onMounted(() => {
