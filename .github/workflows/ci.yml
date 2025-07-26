@@ -15,11 +15,11 @@ jobs:
       # 1. 检出源码
       - uses: actions/checkout@v4
 
-      # 2. 安装 Node.js（示例用 18.x，可根据项目改）
+      # 2. 安装 Node.js
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'       # 缓存 npm 依赖，加速后续运行
+          node-version: 20      # 或 22
+          cache: 'npm'      # 缓存 npm 依赖，加速后续运行
 
       # 3. 安装依赖
       - run: npm ci          # 比 npm install 更快、更干净
