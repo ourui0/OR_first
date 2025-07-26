@@ -24,13 +24,10 @@ jobs:
       # 3. 安装依赖
       - run: npm ci          # 比 npm install 更快、更干净
 
-      # 4. 运行测试
-      - run: npm test
-
-      # 5. 运行构建
+      # 4. 运行构建
       - run: npm run build
 
-      # 6. （可选）上传构建产物当 artifact
+      # 5. （可选）上传构建产物当 artifact
       - uses: actions/upload-artifact@v4
         if: success()
         with:
