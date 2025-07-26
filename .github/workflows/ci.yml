@@ -1,0 +1,38 @@
+# .github/workflows/ci.yml
+name: CI
+
+# 触发条件：push 或 pull_request 时触发
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest  # 运行环境
+    steps:
+      # 1. 检出源码
+      - uses: actions/checkout@v4
+
+      # 2. 安装 Node.js（示例用 18.x，可根据项目改）
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'       # 缓存 npm 依赖，加速后续运行
+
+      # 3. 安装依赖
+      - run: npm ci          # 比 npm install 更快、更干净
+
+      # 4. 运行测试
+      - run: npm test
+
+      # 5. 运行构建
+      - run: npm run build
+
+      # 6. （可选）上传构建产物当 artifact
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: build-files
+          path: dist/        # 这里换成你构建产物所在的目录
