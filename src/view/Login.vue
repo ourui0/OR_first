@@ -4,13 +4,15 @@
     <div class="auth-form">
       <h2>登录您的账户</h2>
       <form @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="username">用户名</label>
-          <input type="text" id="username" v-model="user.username" required>
-        </div>
-        <div class="form-group">
-          <label for="password">密码</label>
-          <input type="password" id="password" v-model="user.password" required>
+        <div class="input-row">
+          <div class="form-group">
+            <label>用户名</label>
+            <input type="text" v-model="user.username" required />
+          </div>
+          <div class="form-group">
+            <label>密码</label>
+            <input type="password" v-model="user.password" required />
+          </div>
         </div>
         <div v-if="message" class="error-message">
           {{ message }}
@@ -76,10 +78,12 @@ const handleLogin = async () => {
   margin: 0;
 }
 
+
 .auth-container {
   position: fixed;
-  inset: 0;             /* 等价于 top:0 right:0 bottom:0 left:0 */
+  inset: 0;
   display: flex;
+  flex-direction: column;   /* 让标题在上，表单在下 */
   justify-content: center;
   align-items: center;
   background-color: #f4f4f4;
@@ -92,7 +96,11 @@ const handleLogin = async () => {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   width: 100%;
   max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;   /* 让输入框和按钮占满卡片宽度 */
 }
+
 h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -105,7 +113,7 @@ label {
   margin-bottom: 5px;
 }
 input {
-  width: 100%;
+  width: 94.5%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;

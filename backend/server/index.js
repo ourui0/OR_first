@@ -5,9 +5,6 @@ import authRouter    from './src/routes/auth.js';
 import activityRouter from './src/routes/activity.js';
 import orderRouter    from './src/routes/order.js';
 import commentRouter  from './src/routes/comment.js';
-import auth from "./src/middleware/jwt.js";
-import {orders} from "./src/models/order.js";
-import router from "./src/routes/order.js";
 
 const app = express();
 const PORT = 3000;
@@ -29,6 +26,5 @@ app.use('/comment', commentRouter);
 
 // 404 处理
 app.use((_req, res) => res.status(404).json({ msg: 'API not found' }));
-
 
 app.listen(PORT, () => console.log(`🚀 Server ready → http://localhost:${PORT}`));

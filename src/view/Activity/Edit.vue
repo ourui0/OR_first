@@ -52,7 +52,7 @@ const load = async () => {
 
 const submit = async () => {
   id ? await updateActivity(id, form.value) : await createActivity(form.value);
-  router.replace('/activities');
+  await router.replace('/activities');
 };
 
 onMounted(load);

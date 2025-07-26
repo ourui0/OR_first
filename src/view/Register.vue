@@ -101,7 +101,7 @@ label {
   margin-bottom: 5px;
 }
 input {
-  width: 100%;
+  width: 94.5%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
