@@ -79,6 +79,7 @@ router.get('/activity/:id/order/status', auth, (req, res) => {
 });
 /* 3. 批量查询报名状态 POST /activity/enroll-status/batch */
 router.post('/activity/enroll-status/batch', auth, (req, res) => {
+    console.error('当前 orders:', orders, Array.isArray(orders));
     try {
         const { activityIds } = req.body;
         const { username } = req.user;
@@ -98,13 +99,7 @@ router.post('/activity/enroll-status/batch', auth, (req, res) => {
         });
     } catch (error) {
         console.error('批量查询报名状态失败:', error);
-        res.status(500).json({
-            code: 500,
-            msg: '查询报名状态失败',
-            error: process.env.NODE_ENV === 'development'
-                ? error.message
-                : undefined
-        });
+        res.json({ code: 200, data: {} });
     }
 });
 

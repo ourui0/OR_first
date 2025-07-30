@@ -4,8 +4,21 @@
       <template #header>{{ id ? '编辑活动' : '新建活动' }}</template>
       <el-form :model="form" label-width="80">
         <el-form-item label="名称"><el-input v-model="form.title"/></el-form-item>
-        <el-form-item label="开始"><el-date-picker v-model="form.startTime" type="datetime"/></el-form-item>
-        <el-form-item label="结束"><el-date-picker v-model="form.endTime" type="datetime"/></el-form-item>
+        <el-form-item label="开始">
+          <el-date-picker
+              v-model="form.startTime"
+              type="datetime"
+              value-format="YYYY-MM-DD HH:mm"
+          />
+        </el-form-item>
+
+        <el-form-item label="结束">
+          <el-date-picker
+              v-model="form.endTime"
+              type="datetime"
+              value-format="YYYY-MM-DD HH:mm"
+          />
+        </el-form-item>
         <el-form-item label="地点"><el-input v-model="form.location"/></el-form-item>
         <el-form-item label="名额"><el-input-number v-model="form.quota" :min="1"/></el-form-item>
         <el-form-item label="描述"><el-input v-model="form.desc" type="textarea"/></el-form-item>

@@ -1,27 +1,27 @@
+// models/comment.js
 import fs from 'fs';
 import path from 'path';
 
 const commentsFilePath = path.join(process.cwd(), 'comments.json');
 
-// 初始化评论数据
-let comments = [];
-
-// 加载评论数据
-try {
-    if (fs.existsSync(commentsFilePath)) {
-        const data = fs.readFileSync(commentsFilePath, 'utf8');
-        comments = JSON.parse(data);
-    } else {
+// 工具：读
+function readComments() {
+    if (!fs.existsSync(commentsFilePath)) {
         fs.writeFileSync(commentsFilePath, '[]');
+        return [];
     }
-} catch (err) {
-    console.error('加载评论数据失败:', err);
+    try {
+        return JSON.parse(fs.readFileSync(commentsFilePath, 'utf8'));
+    } catch (err) {
+        console.error('解析 comments.json 失败，返回空数组', err);
+        return [];
+    }
 }
 
-// 保存评论到文件
-export function saveComments() {
+// 工具：写
+export function saveComments(data =  comments) {
     try {
-        fs.writeFileSync(commentsFilePath, JSON.stringify(comments, null, 2));
+        fs.writeFileSync(commentsFilePath, JSON.stringify(data, null, 2));
         return true;
     } catch (err) {
         console.error('保存评论失败:', err);
@@ -29,5 +29,5 @@ export function saveComments() {
     }
 }
 
-// 导出评论数据
-export { comments };
+// 进程启动时读一次，后续所有路由共享同一份内存数据
+export let comments = readComments();

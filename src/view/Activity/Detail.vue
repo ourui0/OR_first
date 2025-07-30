@@ -49,6 +49,7 @@
         发表
       </el-button>
 
+      <!-- 评论区单条评论 -->
       <div
           v-for="c in comments"
           :key="c.id"
@@ -57,8 +58,13 @@
         <strong>{{ c.username }}</strong>
         <small class="ml-2 text-gray-400">{{ c.createdAt }}</small>
         <div>
-          {{c.content}}
-          <el-popconfirm title="确定删除这条评论？" @confirm="handleDeleteComment(c.id)">
+          {{ c.content }}
+          <!-- 仅管理员或评论作者可见 -->
+          <el-popconfirm
+              v-if="canDeleteComment(c)"
+              title="确定删除这条评论？"
+              @confirm="handleDeleteComment(c.id)"
+          >
             <template #reference>
               <el-button size="small" type="text" danger>删除</el-button>
             </template>
@@ -70,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import { useRoute } from 'vue-router';
 import { Check } from '@element-plus/icons-vue';
 import {
@@ -78,7 +84,7 @@ import {
   joinActivity,
   getComments,
   addComment,
-  checkEnrollStatus, cancelJoinActivity, deleteComment
+  checkEnrollStatus, cancelJoinActivity, deleteComment, getToken
 } from '@/services/activity';
 import { ElMessage } from 'element-plus';
 
@@ -156,6 +162,23 @@ const submitComment = async () => {
     ElMessage.error('评论发表失败');
   }
 };
+const currentUser = computed(() => {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+});
+
+// 是否有权删除该评论
+function canDeleteComment(comment) {
+  if (!currentUser.value) return false;
+  const { username, role } = currentUser.value;
+  return role === 'admin' || comment.username === username;
+}
 const handleDeleteComment = async (id) => {
   try {
     await deleteComment(id);

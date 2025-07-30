@@ -28,9 +28,22 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="200">
         <template #default="{row}">
-          <el-button size="small" @click="$router.push(`/activity/${row.id}`)">详情</el-button>
+          <div class="flex items-center space-x-2">
+            <el-button size="small" @click="$router.push(`/activity/${row.id}`)">详情</el-button>
+
+            <!-- 删除按钮 -->
+            <el-popconfirm
+                v-if="canDelete(row)"
+                title="确定删除该活动吗？"
+                @confirm="handleDelete(row.id)"
+            >
+              <template #reference>
+                <el-button size="small" type="danger">删除</el-button>
+              </template>
+            </el-popconfirm>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -47,11 +60,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getActivities, batchCheckEnrollStatus } from '@/services/activity';
+import {ref, onMounted, computed} from 'vue';
+import {getActivities, batchCheckEnrollStatus, getToken} from '@/services/activity';
 import { useRouter } from "vue-router";
 import { ElMessage } from 'element-plus';
 import {Check} from "@element-plus/icons-vue";
+import {deleteActivity} from "@/services/api.js";
 
 
 const keyword = ref('');
@@ -80,21 +94,18 @@ const loadEnrollStatuses = async () => {
 
 const load = async () => {
   try {
-    // 加载活动列表
+    // 1. 先拿活动列表（此时数据已落盘）
     const { data } = await getActivities({
       keyword: keyword.value,
       page: page.value,
       size: 10
     });
-    // console.log('接口返回的活动列表：', data.list);
     list.value = data.list || [];
     total.value = data.total || 0;
 
-    // 加载报名状态
-    if (list.value.length > 0) {
-      // console.log('活动列表已加载', list.value);           // 👈 先打印
-      await loadEnrollStatuses();                          // 👈 再查状态
-      console.log('合并报名状态后', list.value);
+    // 2. 列表成功后再查报名状态
+    if (list.value.length) {
+      await loadEnrollStatuses();
     }
   } catch (error) {
     console.error('加载活动列表失败:', error);
@@ -106,6 +117,33 @@ function logout() {
   localStorage.removeItem('token');
   router.replace('/login');
 }
+const currentUser = computed(() => {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  } catch {
+    return null;
+  }
+});
 
+// 是否有删除权限
+function canDelete(row) {
+  if (!currentUser.value) return false;
+  const { username, role } = currentUser.value;
+  return role === 'admin' || row.createdBy === username;
+}
+
+// 删除
+async function handleDelete(id) {
+  try {
+    await deleteActivity(id);   // 已经带 Authorization 头
+    ElMessage.success('删除成功');
+    await load();                   // 重新拉列表
+  } catch (e) {
+    ElMessage.error(e?.response?.data?.msg || '删除失败');
+  }
+}
 onMounted(load);
 </script>

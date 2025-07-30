@@ -3,7 +3,11 @@ import axios from "axios";
 
 export const getActivities = (params) => api.get('/activity', { params });
 export const getActivity   = (id)   => api.get(`/activity/${id}`);
-export const createActivity= (data) => api.post('/activity', data);
+export const createActivity = (data) => {
+    const token = getToken();                     // 你的工具函数
+    const { username } = JSON.parse(atob(token.split('.')[1])); // 简易解析
+    return api.post('/activity', { ...data, createdBy: username });
+};
 export const updateActivity= (id,data)=> api.put(`/activity/${id}`, data);
 export const deleteActivity= (id)   => api.delete(`/activity/${id}`);
 export const joinActivity  = (id)   => api.post(`/activity/${id}/order`);
