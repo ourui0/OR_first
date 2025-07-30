@@ -5,6 +5,7 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [vue()],
+  base: '/OR_first/',   // 仓库名，前面带斜杠
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
