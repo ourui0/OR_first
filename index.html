@@ -1,14 +1,252 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/OR_first/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
-    <script type="module" crossorigin src="/OR_first/assets/index-B4ugEKKR.js"></script>
-    <link rel="stylesheet" crossorigin href="/OR_first/assets/index-BlbjZS27.css">
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+    <title>GitHub Pages渲染问题解决方案</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .card.error {
+            border-left-color: #e74c3c;
+        }
+        
+        .card.success {
+            border-left-color: #2ecc71;
+        }
+        
+        .card.warning {
+            border-left-color: #f39c12;
+        }
+        
+        .problem-list {
+            list-style-type: none;
+        }
+        
+        .problem-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .problem-list li i {
+            margin-right: 10px;
+            color: #e74c3c;
+        }
+        
+        .solution-list {
+            list-style-type: none;
+        }
+        
+        .solution-list li {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .solution-list li i {
+            margin-right: 10px;
+            color: #2ecc71;
+        }
+        
+        code {
+            background: #2c3e50;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .debug-section {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .button:hover {
+            background: #2980b9;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GitHub Pages渲染问题解决指南</h1>
+            <p class="subtitle">诊断和解决GitHub Pages无法正确渲染的问题</p>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2>问题分析</h2>
+                <div class="card error">
+                    <p>根据您提供的index.html内容，您的GitHub Pages没有正确渲染的可能原因：</p>
+                </div>
+                
+                <ul class="problem-list">
+                    <li><i class="fas fa-exclamation-circle"></i> 资源路径使用了绝对路径 <code>/OR_first/</code>，在GitHub Pages环境中可能不正确</li>
+                    <li><i class="fas fa-exclamation-circle"></i> 构建产物（JS和CSS文件）可能没有提交到GitHub仓库</li>
+                    <li><i class="fas fa-exclamation-circle"></i> GitHub Pages可能没有正确配置发布源</li>
+                    <li><i class="fas fa-exclamation-circle"></i> 如果使用Vite，可能需要配置<code>base</code>属性</li>
+                    <li><i class="fas fa-exclamation-circle"></i> 浏览器缓存了旧版本的文件</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>解决方案</h2>
+                <div class="card success">
+                    <p>请按照以下步骤排查和解决您的问题：</p>
+                </div>
+                
+                <ul class="solution-list">
+                    <li><i class="fas fa-check-circle"></i> 检查资源路径 - 在GitHub Pages中，建议使用相对路径或<code>./</code>开头的路径</li>
+                    <li><i class="fas fa-check-circle"></i> 确保构建产物（assets文件夹）已提交到GitHub仓库</li>
+                    <li><i class="fas fa-check-circle"></i> 在GitHub仓库设置中，确认Pages设置正确（通常从main分支的/docs文件夹或root发布）</li>
+                    <li><i class="fas fa-check-circle"></i> 如果您使用Vite，在vite.config.js中设置<code>base: '/OR_first/'</code>（如果您的仓库名称是OR_first）</li>
+                    <li><i class="fas fa-check-circle"></i> 清除浏览器缓存或使用Ctrl+F5强制刷新页面</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>配置示例</h2>
+                <div class="card">
+                    <p>Vite配置示例（vite.config.js）：</p>
+                    <pre>
+// vite.config.js
+export default {
+  base: '/OR_first/',
+  // 其他配置...
+}
+                    </pre>
+                </div>
+                
+                <div class="card">
+                    <p>修改后的index.html资源引用示例：</p>
+                    <pre>
+&lt;script type="module" crossorigin src="./assets/index-B4ugEKKR.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" crossorigin href="./assets/index-BlbjZS27.css"&gt;
+                    </pre>
+                </div>
+            </div>
+            
+            <div class="debug-section">
+                <h2>调试信息</h2>
+                <p>当前页面URL: <code id="current-url"></code></p>
+                <p>页面加载时间: <code id="load-time"></code></p>
+                <p>用户代理: <code id="user-agent"></code></p>
+                
+                <a href="#" class="button" onclick="location.reload(true)"><i class="fas fa-sync-alt"></i> 强制刷新页面</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>GitHub Pages问题解决指南 &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        // 显示调试信息
+        document.getElementById('current-url').textContent = window.location.href;
+        document.getElementById('load-time').textContent = new Date().toLocaleString();
+        document.getElementById('user-agent').textContent = navigator.userAgent;
+    </script>
+</body>
 </html>
